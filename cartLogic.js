@@ -61,12 +61,19 @@ $(document).ready( function () {
 
 				$('#cart-list #' + $(draggedElement).attr('id') + ' .quantity').text(item[0].quantity);
 
+				$(cartList).show();
+
 			}
+
+			//IF WE HAVE A WEB SERVER THEN RUN THE PUT REQUEST
+			//sendItems();
 
 		} else {
 
 			$(cartList).append($('#' + data).clone(true));
 			$('#cart-list #' + $(draggedElement).attr('id') + ' .quantity').text('1');
+
+			$(cartList).show();
 
 			var element = $(cartList).find('#' + data);
 			
@@ -79,6 +86,9 @@ $(document).ready( function () {
 
 			$(element).toggleClass('in-cart');
 			$(element).on('dragover', function (ev) { dragover(ev); });
+
+			//IF WE HAVE A WEB SERVER THEN RUN THE PUT REQUEST
+			//sendItems();
 
 		}
 
@@ -106,6 +116,25 @@ $(document).ready( function () {
 
 		cartItems.splice(draggedIndex[0], 1);
 		cartItems.splice(dropIndex[0], 0, draggedItem);
+
+	}
+
+	//IF WE HAVE A WEB SERVER THEN HERE IS THE PUT REQUEST
+	function sendItems() {
+
+		var cartJsonData = JSON.stringify(cartItems);
+
+		$.ajax({
+			url: '/cart',
+			type: 'PUT',
+			data: cartJsonData,
+			success: function (data) {
+				console.log('done');
+			},
+			error: function (error) {
+				console.log('something is wrong');
+			}
+		});
 
 	}
 
