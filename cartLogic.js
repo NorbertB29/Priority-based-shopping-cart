@@ -4,6 +4,8 @@ $(document).ready( function () {
 	var draggedElement;
 	var dropPosition;
 
+	var cartItems = [];
+
 	$('.item').on('dragstart', function (ev) { dragstart(ev); });
 	$(cartList).on('drop', function (ev) { drop(ev); });
 
@@ -22,7 +24,7 @@ $(document).ready( function () {
 		var oldDropPosition = dropPosition;
 		dropPosition = e.currentTarget;
 
-		if ($(dropPosition).hasClass('in-cart')) {
+		if ($(draggedElement).hasClass('in-cart')) {
 
 			$(cartList).off('dragover');
 			$(oldDropPosition).removeClass('dropzone');
@@ -46,20 +48,61 @@ $(document).ready( function () {
 				$(draggedElement).insertBefore($(dropPosition));
 				$(dropPosition).removeClass('dropzone');
 
+				swapCartItems();
+
 			} else {
-				console.log('multiple item - increment');
+
+				var item = $.grep(cartItems, function (e) { return e.id == $(draggedElement).attr('id') });
+				
+				item[0].quantity += 1;
+
+				$('#cart-list #' + $(draggedElement).attr('id') + ' .quantity').text(item[0].quantity);
+
 			}
 
 		} else {
 
 			$(e.target).append($('#' + data).clone(true));
+			$('#cart-list #' + $(draggedElement).attr('id') + ' .quantity').text('1');
 
 			var element = $(e.target).find('#' + data);
+			
+			var itemObj = {
+				id: $(element[0]).attr('id'),
+				quantity: 1
+			};
+			
+			cartItems.push(itemObj);
 
 			$(element).toggleClass('in-cart');
 			$(element).on('dragover', function (ev) { dragover(ev); });
 
 		}
+
+	}
+
+	function swapCartItems() {
+
+		var draggedIndex = $.map(cartItems, function(obj, index) {
+			if(obj.id == $(draggedElement).attr('id')) {
+				return index;
+			}
+		});
+
+		var dropIndex = $.map(cartItems, function(obj, index) {
+			if(obj.id == $(dropPosition).attr('id')) {
+				if (draggedIndex < index) {
+					return index-1;
+				} else {
+					return index;
+				}
+			}
+		});
+
+		var draggedItem = cartItems[draggedIndex[0]];
+
+		cartItems.splice(draggedIndex[0], 1);
+		cartItems.splice(dropIndex[0], 0, draggedItem);
 
 	}
 
