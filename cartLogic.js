@@ -1,5 +1,6 @@
 $(document).ready( function () {
 
+	var cartBtn = $('#cart-btn');
 	var cartList = $('#cart-list');
 	var draggedElement;
 	var dropPosition;
@@ -7,6 +8,8 @@ $(document).ready( function () {
 	var cartItems = [];
 
 	$('.item').on('dragstart', function (ev) { dragstart(ev); });
+	$(cartBtn).on('drop', function (ev) { drop(ev); });
+	$(cartBtn).on('dragover', function (ev) { dragover(ev); });
 	$(cartList).on('drop', function (ev) { drop(ev); });
 
 	function dragstart (e) {
@@ -62,10 +65,10 @@ $(document).ready( function () {
 
 		} else {
 
-			$(e.target).append($('#' + data).clone(true));
+			$(cartList).append($('#' + data).clone(true));
 			$('#cart-list #' + $(draggedElement).attr('id') + ' .quantity').text('1');
 
-			var element = $(e.target).find('#' + data);
+			var element = $(cartList).find('#' + data);
 			
 			var itemObj = {
 				id: $(element[0]).attr('id'),
