@@ -8,6 +8,7 @@ $(document).ready( function () {
 	var cartItems = [];
 
 	$('.item').on('dragstart', function (ev) { dragstart(ev); });
+	$('.item').on('dragend', function (ev) { dragend(ev); });
 	$(cartBtn).on('drop', function (ev) { drop(ev); });
 	$(cartBtn).on('dragover', function (ev) { dragover(ev); });
 	$(cartList).on('drop', function (ev) { drop(ev); });
@@ -94,7 +95,14 @@ $(document).ready( function () {
 
 	}
 
-	function swapCartItems() {
+	function dragend (e) {
+
+		$(e.target).removeClass('dropzone');
+		$(dropPosition).removeClass('dropzone');
+
+	}
+
+	function swapCartItems () {
 
 		var draggedIndex = $.map(cartItems, function(obj, index) {
 			if(obj.id == $(draggedElement).attr('id')) {
@@ -120,7 +128,7 @@ $(document).ready( function () {
 	}
 
 	//IF WE HAVE A WEB SERVER THEN HERE IS THE PUT REQUEST
-	function sendItems() {
+	function sendItems () {
 
 		var cartJsonData = JSON.stringify(cartItems);
 
