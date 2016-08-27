@@ -10,12 +10,12 @@ $(document).ready( function () {
 	$('.item').on('dragstart', function (ev) { dragstart(ev); });
 	$('.item').on('dragend', function (ev) { dragend(ev); });
 	$(cartBtn).on('drop', function (ev) { drop(ev); });
-	$(cartBtn).on('dragover', function (ev) { dragover(ev); });
 	$(cartList).on('drop', function (ev) { drop(ev); });
 
 	function dragstart (e) {
 
 		$(cartList).on('dragover', function (ev) { dragover(ev); });
+		$(cartBtn).on('dragover', function (ev) { dragover(ev); });
 		e.originalEvent.dataTransfer.setData("item", e.target.id);
 		draggedElement = e.target;
 
@@ -31,6 +31,7 @@ $(document).ready( function () {
 		if ($(draggedElement).hasClass('in-cart')) {
 
 			$(cartList).off('dragover');
+			$(cartBtn).off('dragover');
 			$(oldDropPosition).removeClass('dropzone');
 			$(dropPosition).addClass('dropzone');
 
